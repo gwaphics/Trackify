@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trackly</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 30px;
+            background-color: rgb(218, 211, 198);
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 10px;
+            background-color: rgb(144, 140, 132);
+            color: black;
+            border-Radius: 10px;
+        }
+        #questions {
+            margin-top: 40px;
+        }
+        #matches {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1 id="pointsDisplay">Points: </h1><br>
+    <h1>Choose Mode</h1>
+    <button id="br" onclick="switchMode('Battle Royal')">Battle Royal</button>
+    <button id="reload" onclick="switchMode('Reload')">Reload</button><br>
+
+    <div id="questions">
+        <label for="deaths" id="deathsLabel">Deaths:</label>
+        <input type="text" id="deaths" placeholder="Type here..."><br>
+        <label for="eliminations">Eliminations:</label>
+        <input type="text" id="eliminations" placeholder="Type here..."><br>
+        <label for="assists">Assists:</label>
+        <input type="text" id="assists" placeholder="Type here..."><br>
+        <label for="damageDealt">Damage Dealt:</label>
+        <input type="text" id="damageDealt" placeholder="Type here..."><br>
+        <label for="damageTaken">Damage Taken:</label>
+        <input type="text" id="damageTaken" placeholder="Type here..."><br>
+        <label for="placement">Placement:</label>
+        <input type="text" id="placement" placeholder="Type here..."><br>
+    </div>
+
+    <button onclick="calcPoints()">
+        Submit
+    </button><br>
+
+    <h1>Matches</h1>
+    <div id="matches">
+
+    </div>
+
+    <script>
+        var points = 0;
+        var matchNum = 0;
+        var chosenMode = "Battle Royal";
+        var deaths = 0;
+        var eliminations = 0;
+        var assists = 0;
+        var damageDealt = 0;
+        var damageTaken = 0;
+        var placement = 0;
+
+        document.getElementById("pointsDisplay").textContent = `Points: ${points}`;
+
+        function calcPoints() {
+            matchNum += 1;
+
+            deaths = parseInt(document.getElementById('deaths').value) || 0;
+            eliminations = parseInt(document.getElementById('eliminations').value) || 0;
+            assists = parseInt(document.getElementById('assists').value) || 0;
+            damageDealt = parseInt(document.getElementById('damageDealt').value) || 0;
+            damageTaken = parseInt(document.getElementById('damageTaken').value) || 0;
+            placement = parseInt(document.getElementById('placement').value) || 0;
+
+            const inputs = document.querySelectorAll('#questions input[type="text"]');
+            inputs.forEach(input => {
+                input.value = '';
+            });
+            
+            if (chosenMode == "Reload") {
+                points -= deaths * 2;
+                points += eliminations * 2;
+                points += assists;
+                points += Math.round(damageDealt/200);
+                points -= Math.round(damageTaken/200);
+                if (placement <= 10 && placement != 0) {
+                    points += 2;
+                }
+                if (placement <= 5 && placement != 0) {
+                    points += 3;
+                }
+                if (placement <= 3 && placement != 0) {
+                    points += 5;
+                }
+                if (placement <= 2 && placement != 0) {
+                    points += 5;
+                }
+                if (placement <= 1 && placement != 0) {
+                    points += 10;
+                }
+            } else {
+                points += eliminations * 2;
+                points += assists;
+                points += Math.round(damageDealt/200);
+                points -= Math.round(damageTaken/200);
+                if (placement <= 75 && placement != 0) {
+                    points += 1;
+                }
+                if (placement <= 50 && placement != 0) {
+                    points += 1;
+                }
+                if (placement <= 40 && placement != 0) {
+                    points += 1;
+                }
+                if (placement <= 35 && placement != 0) {
+                    points += 2;
+                }
+                if (placement <= 30 && placement != 0) {
+                    points += 2;
+                }
+                if (placement <= 25 && placement != 0) {
+                    points += 3;
+                }
+                if (placement <= 20 && placement != 0) {
+                    points += 3;
+                }
+                if (placement <= 15 && placement != 0) {
+                    points += 3;
+                }
+                if (placement <= 10 && placement != 0) {
+                    points += 5;
+                }
+                if (placement <= 5 && placement != 0) {
+                    points += 5;
+                }
+                if (placement <= 3 && placement != 0) {
+                    points += 5;
+                }
+                if (placement <= 2 && placement != 0) {
+                    points += 5;
+                }
+                if (placement <= 1 && placement != 0) {
+                    points += 10;
+                }
+            }
+
+            document.getElementById("pointsDisplay").textContent = `Points: ${points}`;
+
+            const matchEntry = document.createElement('div');
+            if (chosenMode == "Reload") {
+                matchEntry.textContent = `Match ${matchNum}: Mode (${chosenMode}), Deaths (${deaths}), Placed (${placement}), Eliminations (${eliminations}), Assists (${assists}), Damage Dealt (${damageDealt}), Damage Taken (${damageTaken})`;
+            } else {
+                matchEntry.textContent = `Match ${matchNum}: Mode (${chosenMode}), Placed (${placement}), Eliminations (${eliminations}), Assists (${assists}), Damage Dealt (${damageDealt}), Damage Taken (${damageTaken})`;
+            }
+            document.getElementById("matches").appendChild(matchEntry);
+        }
+
+        function switchMode(mode) {
+            if (mode == "Battle Royal") {
+                document.getElementById("deaths").style.display = "none";
+                document.getElementById("deathsLabel").style.display = "none";
+                document.getElementById("br").style.backgroundColor = "white";
+                document.getElementById("reload").style.backgroundColor = "rgb(144, 140, 132)";
+            } else {
+                document.getElementById("deaths").style.display = "inline-block";
+                document.getElementById("deathsLabel").style.display = "inline-block";
+                document.getElementById("br").style.backgroundColor = "rgb(144, 140, 132)";
+                document.getElementById("reload").style.backgroundColor = "white";
+            }
+        }
+
+        switchMode("Battle Royal");
+    </script>
+</body>
+</html>
